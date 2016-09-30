@@ -17,8 +17,11 @@
     });
 
     $(document).on('change', '#select_produto', function () {
-      
-
+        selecionarProduto();
+    
+    });
+    $(document).click().on('change', '#qtde_item', function () {
+        calcuaPreco();
     });
 
 });
@@ -61,21 +64,27 @@ $('#btn_iniciar_venda').click(function () {
 
 
 
-
-    function selecionarProduto() {
+function selecionarProduto() {
         $.getJSON("http://localhost:3630/api/produto/listagemproduto", function (p) {
-            var campo;
-            for (var i = 0; i < length; i++) {
-                if ($('#select_produto :selected').val() == p.nome) {
-                    campo = '<input type="number" class="form-control" id="preco_unitario" value ="' + p.preco_venda + '" disabled="true">';
-                   
+            //var campo = '<input type="number" class="form-control" id="preco_unitario" value = "0" disabled="true">';;
+            for (var i = 0; i < p.length; i++) {
+                if ($('#select_produto :selected').text() == p[i].nome) {
+                    //campo = '<input type="number" class="form-control" id="preco_unitario" value ="" disabled="true">' + p[0].preco_venda + '</input>';
+                    $('#preco_unitario').val(p[i].preco_venda);
+                    break;
                 }
-                $('input#preco_unitario').html(campo);
-            }
+                
+           }
         
         });
-    }
-    function carregarProdutoSelect() {
+}
+
+function calcuaPreco() {
+    $('valor_total_item').val($('#preco_unitario').val()*$('#qtde_item').val());
+}
+
+
+function carregarProdutoSelect() {
         $(function () {
             //"http://nli.univale.br/apicliente/api/cliente/retornaclientes?tipo=json"
             $.getJSON("http://localhost:3630/api/produto/listagemproduto", function (j) {
@@ -86,7 +95,7 @@ $('#btn_iniciar_venda').click(function () {
                 $("select#select_produto").html(options);
             });
         });
-    }
+}
 
     $('#btn_cad_cliente').click(function () {
         abremodalcliente();
